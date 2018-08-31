@@ -11,10 +11,17 @@ addons:
 compiler:
   - clang
   - gcc
+env:
+  - TOOLKIT=true
 matrix:
     exclude:
         - os: osx
           compiler: gcc
+        - os: osx
+          env: TOOLKIT=true
+        - os: linux
+          compiler: clang
+          env: TOOLKIT=true
 cache:
   directories:
     - ffmpeg-samples
@@ -22,9 +29,13 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update --all; fi
 install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install nasm; fi
-script:
-  - mkdir -p ffmpeg-samples
-  - ./configure --samples=ffmpeg-samples --cc=$CC
-  - make -j 8
-  - make fate-rsync
-  - make check -j 8
+script: |
+  if [[ $TOOLKIT = true ]]; then
+    bash <(curl -s https://runtimeverification.com/toolkit/docker/bash) nightly-2018-08-31
+  else
+    mkdir -p ffmpeg-samples
+    ./configure --samples=ffmpeg-samples --cc=$CC
+    make -j 8
+    make fate-rsync
+    make check -j 8
+  fi
