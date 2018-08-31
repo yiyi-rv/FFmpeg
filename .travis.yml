@@ -13,6 +13,7 @@ compiler:
   - gcc
 env:
   - TOOLKIT=true
+  - TOOLKIT=false
 matrix:
     exclude:
         - os: osx

@@ -6,7 +6,7 @@ report_out=`pwd`/report
 rm -rf $json_out
 rm -rf $report_out
 
-apt install -y yasm
+apt install -y yasm diffutils
 
 mkdir -p ffmpeg-samples
 ./configure --samples=ffmpeg-samples --cc=kcc --ld=kcc --extra-cflags="-fissue-report=$json_out" 
